@@ -137,7 +137,6 @@ transition_counts_home.10.5 <- get_transition_counts(
 )
 ```
 
-
 ```{r}
 ggplot(transition_counts_home.10.5 %>% filter(result != 'even'), aes(x = score_diff_state, y = prob, fill = result)) +
   geom_col(position = 'fill') +
@@ -162,7 +161,6 @@ transition_counts_home.10.5 <- get_transition_counts(
   next_state_type = 1
 )
 ```
-
 
 ```{r}
 ggplot(transition_counts_away.10.5 %>% filter(result != 'even'), aes(x = score_diff_state, y = prob, fill = result)) +
