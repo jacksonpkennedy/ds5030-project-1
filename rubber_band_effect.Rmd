@@ -87,7 +87,7 @@ get_transition_counts <- function(data, is_home, poss_interval_length, bin_width
       result = case_when(
         lead(score_diff_after) > score_diff_after ~ 'gain',
         lead(score_diff_after) < score_diff_after ~ 'lose',
-        lead(score_diff_after) == score_diff_after ~ 'lose',
+        lead(score_diff_after) == score_diff_after ~ 'even',
         .default = NA
       )
     ) %>%
