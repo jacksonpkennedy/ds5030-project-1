@@ -1,0 +1,164 @@
+---
+title: 'Rubber Band Effect in NCAAM'
+author: 'Jackson Kennedy'
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = T, message = F, warning = T)
+library(tidyverse)
+```
+
+
+## Determine ideal length for possession intervals (i.e., time steps) empirically
+```{r}
+boxplot(team_data$ortgAdj/100)
+mosaic::favstats(team_data$ortgAdj/100) # 1.07 PPP => ~11 expected points per 10 possessions
+```
+
+
+## Write function to derive transition counts & probabilities
+```{r}
+get_transition_counts <- function(data, is_home, poss_interval_length, bin_width) {
+  # filter for competitive, non-OT games; remove event-less plays; create possession ID
+  by_play <- data %>%
+    filter(
+      !str_detect(description, regex('Jump Ball|End of', ignore_case = T)),
+    ) %>%
+    group_by(game_id) %>%
+    filter(
+      min(score_diff) >= -30,
+      max(score_diff) < 30,
+      max(half) <= 2,
+      !any(is.na(possession_before) | is.na(possession_after))
+    ) %>%
+    mutate(
+      is_new_possession = if_else(possession_before != lag(possession_before) | is.na(lag(possession_before)), T, F),
+      possession_id = cumsum(is_new_possession)
+    ) %>%
+    ungroup()
+  
+  # aggregate by possession; create possession interval ID
+  if (is_home) {
+    by_poss <- by_play %>%
+      group_by(game_id, possession_id) %>%
+      summarize(
+        possession_team = last(possession_before),
+        possession_end_time = min(secs_remaining_absolute),
+        score_diff_after = last(score_diff),
+        reference_team = last(home),
+        .groups = 'drop'
+      ) %>%
+      group_by(game_id) %>%
+      mutate(interval_id = ceiling(possession_id/poss_interval_length)) %>%
+      ungroup() %>%
+      arrange(game_id, possession_id)
+  } else {
+    by_poss <- by_play %>%
+      group_by(game_id, possession_id) %>%
+      summarize(
+        possession_team = last(possession_before),
+        possession_end_time = min(secs_remaining_absolute),
+        score_diff_after = -1*last(score_diff),
+        reference_team = last(away),
+        .groups = 'drop'
+      ) %>%
+      group_by(game_id) %>%
+      mutate(interval_id = ceiling(possession_id/poss_interval_length)) %>%
+      ungroup() %>%
+      arrange(game_id, possession_id)
+  }
+  
+  # aggregate by possession interval; bin score differentials
+  by_int <- by_poss %>%
+    group_by(game_id, interval_id) %>%
+    summarize(
+      score_diff_after = last(score_diff_after),
+      .groups = 'drop'
+    ) %>%
+    mutate(
+      score_diff_state = cut(
+        score_diff_after,
+        breaks = seq(-30, 30, by = bin_width),
+        include.lowest = T,
+        right = F
+      )
+    ) %>%
+    arrange(game_id, interval_id)
+  
+  # build transition matrix
+  transitions <- by_int %>%
+    group_by(game_id) %>%
+    mutate(
+      result = case_when(
+        lead(score_diff_after) > score_diff_after ~ 'gain',
+        lead(score_diff_after) < score_diff_after ~ 'lose',
+        lead(score_diff_after) == score_diff_after ~ 'lose',
+        .default = NA
+      )
+    ) %>%
+    ungroup() %>%
+    filter(!is.na(result)) # drops last interval of each game
+  
+  transition_counts <- transitions %>%
+    count(score_diff_state, result) %>%
+    group_by(score_diff_state) %>%
+    mutate(prob = n/sum(n)) %>%
+    ungroup()
+  
+  return(transition_counts)
+}
+```
+
+
+## Analyze transition data for home teams
+```{r}
+transition_counts_home.10.5 <- get_transition_counts(
+  data = pbp,
+  is_home = T,
+  poss_interval_length = 10,
+  bin_width = 5
+)
+```
+
+
+```{r}
+ggplot(transition_counts_home.10.5, aes(x = score_diff_state, y = prob, fill = result)) +
+  geom_col(position = 'fill') +
+  labs(
+    title = 'Rubber Band Effect (Home)',
+    x = 'Score Differential',
+    y = 'Probability',
+    fill = 'Result'
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+## Analyze transition data for away teams
+```{r}
+transition_counts_home.10.5 <- get_transition_counts(
+  data = pbp,
+  is_home = F,
+  poss_interval_length = 10,
+  bin_width = 5
+)
+```
+
+
+```{r}
+ggplot(transition_counts_away.10.5, aes(x = score_diff_state, y = prob, fill = result)) +
+  geom_col(position = 'fill') +
+  labs(
+    title = 'Rubber Band Effect (Home)',
+    x = 'Score Differential',
+    y = 'Probability',
+    fill = 'Result'
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
