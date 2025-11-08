@@ -123,7 +123,7 @@ transition_counts_home.10.5 <- get_transition_counts(
 ```
 
 ```{r}
-ggplot(transition_counts_home.10.5, aes(x = score_diff_state, y = prob, fill = result)) +
+ggplot(transition_counts_home.10.5 %>% filter(result != 'even'), aes(x = score_diff_state, y = prob, fill = result)) +
   geom_col(position = 'fill') +
   labs(
     title = 'Rubber Band Effect (Home)',
@@ -147,7 +147,7 @@ transition_counts_home.10.5 <- get_transition_counts(
 ```
 
 ```{r}
-ggplot(transition_counts_away.10.5, aes(x = score_diff_state, y = prob, fill = result)) +
+ggplot(transition_counts_away.10.5 %>% filter(result != 'even'), aes(x = score_diff_state, y = prob, fill = result)) +
   geom_col(position = 'fill') +
   labs(
     title = 'Rubber Band Effect (Away)',
