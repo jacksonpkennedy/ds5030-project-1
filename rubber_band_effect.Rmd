@@ -112,7 +112,7 @@ get_transition_counts <- function(data, is_home, poss_interval_length, bin_width
 ```
 
 
-## Analyze transition data for home teams
+## Analyze rubber band effect for home teams
 ```{r}
 transition_counts_home.10.5 <- get_transition_counts(
   data = pbp,
@@ -137,7 +137,7 @@ ggplot(transition_counts_home.10.5, aes(x = score_diff_state, y = prob, fill = r
 ```
 
 
-## Analyze transition data for away teams
+## Analyze rubber band effect for away teams
 ```{r}
 transition_counts_home.10.5 <- get_transition_counts(
   data = pbp,
