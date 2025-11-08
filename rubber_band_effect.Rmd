@@ -11,13 +11,6 @@ library(tidyverse)
 ```
 
 
-## Determine ideal length for possession intervals (i.e., time steps) empirically
-```{r}
-boxplot(team_data$ortgAdj/100)
-mosaic::favstats(team_data$ortgAdj/100) # 1.07 PPP => ~11 expected points per 10 possessions
-```
-
-
 ## Write function to derive transition counts & probabilities
 ```{r}
 get_transition_counts <- function(data, is_home, poss_interval_length, bin_width) {
@@ -112,6 +105,13 @@ get_transition_counts <- function(data, is_home, poss_interval_length, bin_width
 ```
 
 
+## Determine ideal length for possession intervals (i.e., time steps) empirically
+```{r}
+boxplot(team_data$ortgAdj/100)
+mosaic::favstats(team_data$ortgAdj/100) # 1.07 PPP => ~11 expected points per 10 possessions
+```
+
+
 ## Analyze rubber band effect for home teams
 ```{r}
 transition_counts_home.10.5 <- get_transition_counts(
@@ -121,7 +121,6 @@ transition_counts_home.10.5 <- get_transition_counts(
   bin_width = 5
 )
 ```
-
 
 ```{r}
 ggplot(transition_counts_home.10.5, aes(x = score_diff_state, y = prob, fill = result)) +
@@ -147,12 +146,11 @@ transition_counts_home.10.5 <- get_transition_counts(
 )
 ```
 
-
 ```{r}
 ggplot(transition_counts_away.10.5, aes(x = score_diff_state, y = prob, fill = result)) +
   geom_col(position = 'fill') +
   labs(
-    title = 'Rubber Band Effect (Home)',
+    title = 'Rubber Band Effect (Away)',
     x = 'Score Differential',
     y = 'Probability',
     fill = 'Result'
