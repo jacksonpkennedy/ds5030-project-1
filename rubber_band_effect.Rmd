@@ -17,7 +17,8 @@ get_transition_counts <- function(data, is_home, poss_interval_length, bin_width
   # filter for competitive, non-OT games; remove event-less plays; create possession ID
   by_play <- data %>%
     filter(
-      !str_detect(description, regex('Jump Ball|End of', ignore_case = T)),
+      !(str_detect(description, regex('Jump Ball', ignore_case = T)) & is.na(possession_before)),
+      !str_detect(description, regex('End of', ignore_case = T))
     ) %>%
     group_by(game_id) %>%
     filter(
