@@ -1,2 +1,4 @@
 data/
 simulation_bootstrap_allteams.ipynb
+rider_uva_pbp_scoring_states.csv
+rider_uva_scoring_with_markov_probs.csv
