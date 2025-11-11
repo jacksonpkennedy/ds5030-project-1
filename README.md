@@ -6,6 +6,12 @@ Submit a document or notebook that clearly addresses the following:
 
 Describe the data clearly -- particularly any missing data that might impact your analysis -- and the provenance of your dataset. Who collected the data and why? (10/100 pts)
 
+## Data Description
+
+The data used in this analysis was collected off of Kaggle, found [here](https://www.kaggle.com/datasets/robbypeery/college-basketball-pbp-23-24?resource=download). The dataset is already very cleaned and didn't have any erroneous data. However, the dataset struggled to capture some possession data, especially for the smaller conference teams. This is to be expected, as the data is collected from play-by-play logs that are manually entered by statisticians at each game. In order to account for this, we filtered our dataset to only include games that had clean possession data for both teams. The dataset was collected to provide a comprehensive view of college basketball games, including play-by-play events, scores, and other relevant statistics. This data is often used for sports analytics, performance analysis, and strategic planning by teams and analysts.
+
+The creator of the dataset is Robby Peery, who is a data scientist and sports enthusiast. He collected the data to provide a resource for sports analysts, researchers, and fans interested in college basketball statistics. The dataset aims to facilitate analysis and insights into game dynamics, player performance, and team strategies.
+
 
 ## Phenomenon Description
 What phenomenon are you modeling? Provide a brief background on the topic, including definitions and details that are relevant to your analysis. Clearly describe its main features, and support those claims with data where appropriate. (10/100 pts)
@@ -23,10 +29,12 @@ Our model is a Markov transition model that defines states based on score differ
 
 Either use your model to create new sequences (if the model is more generative) or bootstrap a quantity of interest (if the model is more inferential). (15/100 pts)
 
-The simulation code is located in `simulation.ipynb`. We simulated the UVA vs. NC Central game from the 2025-2026 season starting at halftime. UVA was up 17 points at half, and then we modeled the second half of the game as a Markov process with states defined by score differential intervals. The transition matrix was estimated from historical data of similar games. The simulation runs 360 iterations of the second half, each consisting of 7 time steps (representing possessions). The results are visualized using a lineplot show
+The simulation code is located in `simulation.ipynb`. We simulated the UVA vs. NC Central game from the 2025-2026 season starting at halftime. UVA was up 17 points at half, and then we modeled the second half of the game as a Markov process with states defined by score differential intervals. The transition matrix was estimated from historical data of similar games. The simulation runs 360 iterations of the second half, each consisting of 7 time steps (representing possessions). The results are visualized using a lineplot showing the evolution of the score differential over time. You can clearly see that coming out of the second half, UVA fights the rubber band effect and increases their lead over NC Central. But then as time progresses and the game continues, the score differential trends back downwards, demonstrating the rubber band effect as NC Central catches up. The simulation is plotted over various simulations using the Markov transition model to show the variability in outcomes. While the actual score does not explicitly follow the average trend of the simulations, it does show the same general pattern of the score differential decreasing over time, indicating that the rubber band effect is present in the actual game as well.
 
 ## Critical Evaluation
 Critically evaluate your work in part 4. Do your sequences have the properties of the training data, and if not, why not? Are your estimates credible and reliable, or is there substantial uncertainty in your results? (15/100 pts)
+
+Our data had fewer samples for the edge score differential buckets. This lower sample size means that our confidence interval is larger than if we had a larger dataset with more games involving high score differentials. The rest of the probabilities that are associated with the more mid-range score differentials have many more samples, so the confidence intervals are going to be better.
 
 ## Conclusion
 Write a conclusion that explains the limitations of your analysis and potential for future work on this topic. (10/100 pts)
