@@ -35,7 +35,7 @@ The simulation code is located in `simulation.ipynb`. We simulated the UVA vs. N
 ## Critical Evaluation
 Critically evaluate your work in part 4. Do your sequences have the properties of the training data, and if not, why not? Are your estimates credible and reliable, or is there substantial uncertainty in your results? (15/100 pts)
 
-Our data had meaningfully fewer observations for the tail score differential buckets; hence we're less certain in the magnitude (not direction) of the rubber band effect at those states. The [25, 30) and [-30, 25) buckets, for example, account for less than 200 total observations whereas the middle states (e.g., [0, 5)) have over 8,000.
+Our data had meaningfully fewer observations for the tail score differential buckets; hence we're less certain in the magnitude (not direction) of the rubber band effect at those states. The [25, 30) and [-30, 25) buckets, for example, account for less than 200 total observations whereas the middle states (e.g., [0, 5)) have over 8,000. The simulated sequences do, in fact, have the same properties as the training data, with the most frequent simulated paths converging gradually to zero.
 
 
 ## Conclusion
