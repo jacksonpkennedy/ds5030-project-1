@@ -2,10 +2,6 @@
 #### Nathan Todd, Jackson Kennedy, Nathan Wan, Cole Whittington, Hudson Noyes, James Sweat, Emmet Hannam, Lino de Ros
 Quantifying the "rubber band effect" in NCAAM
 
-### Instructions
-Submit a document or notebook that clearly addresses the following:
-
-Describe the data clearly -- particularly any missing data that might impact your analysis -- and the provenance of your dataset. Who collected the data and why? (10/100 pts)
 
 ## Data Description
 
@@ -23,7 +19,7 @@ This project seeks to model the 'rubber band effect' in NCAA and professional ba
 ## Non-Parametric Model Description
 Describe your non-parametric model (empirical cumulative distribution functions, kernel density function, local constant least squares regression, Markov transition models). How are you fitting your model to the phenomenon to get realistic properties of the data? What challenges did you have to overcome? (15/100 pts)
 
-Our model is a Markov transition model that defines states based on score differential intervals. The states are defined as follows: [-30,-25), [-25,-20), [-20,-15), [-15,-10), [-10,-5), [-5,0), [0,5), [5,10), [10,15), [15,20), [20,25), [25,30) where each of the values represents a score differential. The transition time periods are 10 possessions, or 5 possessions per team. A typical team will have between 7 and 8 possessions per half. We fit the model by estimating the transition probabilities between these states using historical game data. The games from the 2023-2024 NCAAM season (6000+) were broken up into segments of 10 possessions, and the score differential at the start and end of each segment was recorded. The transition matrix was then constructed by calculating the frequency of transitions from one state to another and normalizing these frequencies to obtain probabilities. These probabilities were then used to populate the transition matrix. One interesting note was that teams can't go from a large negative differential to a large positive differential in a single time step (since it's not common to gain something like 30 points within one 10-possession time interval), so many of the transition probabilities in the matrix are zero. This sparsity was a challenge when simulating sequences, as it limited the possible transitions that could occur in certain states. But because of our efforts to still populate the transition matrix accurately, we were able to create a realistic model of score differential changes over time in basketball games.
+Our model is a Markov transition model that defines states based on score differential intervals. The states are defined as follows: [-30,-25), [-25,-20), [-20,-15), [-15,-10), [-10,-5), [-5,0), [0,5), [5,10), [10,15), [15,20), [20,25), [25,30) where each of the values represents a score differential. The transition time periods are 10 possessions, or 5 possessions per team. A typical team will have between 70 and 80 combined possessions per half. We fit the model by estimating the transition probabilities between these states using historical game data. The games from the 2023-2024 NCAAM season (6000+) were broken up into segments of 10 possessions, and the score differential at the start and end of each segment was recorded. The transition matrix was then constructed by calculating the frequency of transitions from one state to another and normalizing these frequencies to obtain probabilities. These probabilities were then used to populate the transition matrix. One interesting note was that teams can't go from a large negative differential to a large positive differential in a single time step (since it's not common to gain something like 30 points within one 10-possession time interval), so many of the transition probabilities in the matrix are zero. This sparsity was a challenge when simulating sequences, as it limited the possible transitions that could occur in certain states. But because of our efforts to still populate the transition matrix accurately, we were able to create a realistic model of score differential changes over time in basketball games.
 
 
 ## Simulation
@@ -38,7 +34,6 @@ Critically evaluate your work in part 4. Do your sequences have the properties o
 Our data had fewer samples for the edge score differential buckets. This lower sample size means that our confidence interval is larger than if we had a larger dataset with more games involving high score differentials. The rest of the probabilities that are associated with the more mid-range score differentials have many more samples, so the confidence intervals are going to be better.
 
 ## Conclusion
-Write a conclusion that explains the limitations of your analysis and potential for future work on this topic. (10/100 pts)
 
 This project aims to model the point differential state transitions throughout an NCAA Men's Basketball game based on the 2023-2024 season play-by-play data, attempting to explain the phenomenon of the "rubber band effect" in NCAA basketball. The Markov Transition Model was used to model the transitions between states of score differential based on the probabilities of score changes from past games which are stored in a transition dataset. Results from the simulation are shown in the simulation.ipynb file generally support either the model with accelerations of scoring or sustained score differentials. As score is a numeric range, it is more difficult to model state changes due to larger state spaces. 
 
