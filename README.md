@@ -9,7 +9,7 @@ Describe the data clearly -- particularly any missing data that might impact you
 
 ## Data Description
 
-The data used in this analysis was collected off of Kaggle, found [here](https://www.kaggle.com/datasets/robbypeery/college-basketball-pbp-23-24?resource=download). This data is free and available for download. It can be downloaded by clicking the "Download" button on the Kaggle page. The dataset is already very cleaned and didn't have any erroneous data. However, the dataset struggled to capture some possession data, especially for the smaller conference teams. This is to be expected, as the data is collected from play-by-play logs that are manually entered by statisticians at each game. In order to account for this, we filtered our dataset to only include games that had clean possession data for both teams. The dataset was collected to provide a comprehensive view of college basketball games, including play-by-play events, scores, and other relevant statistics. This data is often used for sports analytics, performance analysis, and strategic planning by teams and analysts.
+The data used in this analysis was collected off of Kaggle, found [here](https://www.kaggle.com/datasets/robbypeery/college-basketball-pbp-23-24?resource=download). This data is free and available for download. It can be downloaded by clicking the "Download" button on the Kaggle page. The dataset is already very clean and didn't have any erroneous data. However, the dataset struggled to capture some possession data, especially for the smaller conference teams. This is to be expected, as the data is collected from play-by-play logs that are manually entered by statisticians at each game. In order to account for this, we filtered our dataset to only include games that had clean possession data for both teams. The dataset was collected to provide a comprehensive view of college basketball games, including play-by-play events, scores, and other relevant statistics. This data is often used for sports analytics, performance analysis, and strategic planning by teams and analysts.
 
 The creator of the dataset is Robby Peery, who is a data scientist and sports enthusiast. He collected the data to provide a resource for sports analysts, researchers, and fans interested in college basketball statistics. The dataset aims to facilitate analysis and insights into game dynamics, player performance, and team strategies.
 
@@ -35,7 +35,8 @@ The simulation code is located in `simulation.ipynb`. We simulated the UVA vs. N
 ## Critical Evaluation
 Critically evaluate your work in part 4. Do your sequences have the properties of the training data, and if not, why not? Are your estimates credible and reliable, or is there substantial uncertainty in your results? (15/100 pts)
 
-Our data had fewer samples for the edge score differential buckets. This lower sample size means that our confidence interval is larger than if we had a larger dataset with more games involving high score differentials. The rest of the probabilities that are associated with the more mid-range score differentials have many more samples, so the confidence intervals are going to be better.
+Our data had meaningfully fewer observations for the tail score differential buckets; hence we're less certain in the magnitude (not direction) of the rubber band effect at those states. The [25, 30) and [-30, 25) buckets, for example, account for less than 200 total observations whereas the middle states (e.g., [0, 5)) have over 8,000.
+
 
 ## Conclusion
 Write a conclusion that explains the limitations of your analysis and potential for future work on this topic. (10/100 pts)
